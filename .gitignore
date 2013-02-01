@@ -1,0 +1,18 @@
+.autotest
+coverage
+.DS_Store
+pkg
+*/tags
+*~
+
+# RVM and RBENV ruby version files
+.rbenv-version
+.rvmrc
+
+# Documentation
+_site/*
+.yardoc/
+doc/
+
+# Gem file
+*.gem
