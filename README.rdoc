@@ -1,18 +1,45 @@
-# Knife stale nodes plugin
+= Knife stale nodes plugin
+
+= DESCRIPTION:
 
 This is a knife plugin to list nodes that haven't checked in for some period of time.
 
-# Warning
+= INSTALLATION:
+
+    gem install chef
+
+= USAGE:
+
+To display all nodes that haven't checked in in more that one hour, run the command:
+
+    knife stalenodes
+
+Available options are:
+
+* -D, --days DAYS
+* -H, --hours HOURS
+* -m, --minutes MINUTES
+* -r, --reverse
+
+These options can be used together so:
+
+    knife stalenodes -H 4 -m 30 -r
+
+Will show all the nodes that have checked in within the last 4.5 hours
+
+= WARNING:
 
 This plugin is not officially supported by Opscode.
 
-# LICENSE
+= LICENSE
 
 Unless otherwise specified all works in this repository are
 
 Copyright 2012 Opscode, Inc
 
 Author:: Paul Mooring (paul@opscode.com)
+Copyright:: Copyright (c) 2013 Opscode, Inc.
+License:: Apache License, Version 2.0
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

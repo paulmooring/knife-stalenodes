@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-module KnifeSuppport
+module KnifeStalenodes
   class Stalenodes < Chef::Knife
     banner "knife stalenodes [options]"
 
