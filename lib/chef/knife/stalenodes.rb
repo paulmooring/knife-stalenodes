@@ -15,6 +15,8 @@
 # limitations under the License.
 #
 
+require 'knife-stalenodes/partial_search'
+
 module KnifeStalenodes
   class Stalenodes < Chef::Knife
     banner "knife stalenodes [options]"
@@ -95,12 +97,16 @@ module KnifeStalenodes
     end
 
     def run
-      query = Chef::Search::Query.new
+      query = Chef::PartialSearch.new
+      search_args = { :keys => { 
+                        :ohai_time => ['ohai_time'],
+                        :name => ['name']
+                      }  
+                    }
 
-      query.search(:node, get_query).first.each do |node|
-        # nodes.each do |node|
+      query.search(:node, get_query, search_args).first.each do |node|
         msg = check_last_run_time(node['ohai_time'].to_i)
-        HighLine.new.say "#{@ui.color(msg[:text], msg[:color])} ago: #{node.name}"
+        HighLine.new.say "#{@ui.color(msg[:text], msg[:color])} ago: #{node['name']}"
       end
     end
   end
