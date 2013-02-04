@@ -13,6 +13,3 @@ pkg
 _site/*
 .yardoc/
 doc/
-
-# Gem file
-*.gem
