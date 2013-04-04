@@ -57,6 +57,12 @@ module KnifeStalenodes
         :description  => "Adds minutes to hours since last check in",
         :default      => 0
 
+    option :maxhost,
+        :short        => "-n HOSTS",
+        :long         => "--number HOSTS",
+        :description  => "Max number of hosts to search",
+        :default      => 2500
+
 
     def calculate_time
       seconds = config[:days].to_i * 86400 + config[:hours].to_i * 3600 + config[:minutes].to_i * 60
@@ -101,7 +107,8 @@ module KnifeStalenodes
       search_args = { :keys => { 
                         :ohai_time => ['ohai_time'],
                         :name => ['name']
-                      }  
+                      },
+                      :rows => config[:maxhost]
                     }
 
       query.search(:node, get_query, search_args).first.each do |node|
