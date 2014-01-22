@@ -70,6 +70,18 @@ module KnifeStalenodes
       return Time.now.to_i - seconds
     end
 
+    def connection
+      @connection ||= begin
+        require 'fog'
+        connection = Fog::Compute.new(
+          :provider => 'AWS',
+          :aws_access_key_id => Chef::Config[:knife][:aws_access_key_id],
+          :aws_secret_access_key => Chef::Config[:knife][:aws_secret_access_key],
+          :region => Chef::Config[:knife][:region]
+        )
+      end
+    end
+
     def get_query
       if config[:reverse]
         "ohai_time:[#{calculate_time} TO *]"
@@ -102,9 +114,25 @@ module KnifeStalenodes
       end
     end
 
+    def use_ec2?
+      if Chef::Config[:knife][:aws_access_key_id]
+        return true
+      else
+        return false
+      end
+    end
+
     def run
+      if use_ec2?
+        live_hosts = connection.servers.select{|s|
+          s.state == "running" && s.tags['Name']
+        }.map{|s|
+          s.tags["Name"]
+        }
+      end
+
       query = Chef::PartialSearch.new
-      search_args = { :keys => { 
+      search_args = { :keys => {
                         :ohai_time => ['ohai_time'],
                         :name => ['name']
                       },
@@ -113,7 +141,22 @@ module KnifeStalenodes
 
       query.search(:node, get_query, search_args).first.each do |node|
         msg = check_last_run_time(node['ohai_time'].to_i)
-        HighLine.new.say "#{@ui.color(msg[:text], msg[:color])} ago: #{node['name']}"
+
+        if use_ec2?
+          if live_hosts.include?(node['name'])
+            islive = ""
+          else
+            islive = " - NOT IN EC2"
+          end
+        end
+
+        output = "#{@ui.color(msg[:text], msg[:color])} ago: #{node['name']}"
+
+        if use_ec2?
+          HighLine.new.say output + islive
+        else
+          HighLine.new.say output
+        end
       end
     end
   end
