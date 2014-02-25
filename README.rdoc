@@ -20,12 +20,19 @@ Available options are:
 * -H, --hours HOURS
 * -m, --minutes MINUTES
 * -r, --reverse
+* -e, --use-ec2
 
 These options can be used together so:
 
     knife stalenodes -H 4 -m 30 -r
 
 Will show all the nodes that have checked in within the last 4.5 hours
+
+Add the following to your knife.rb to permanently enable --use-ec2:
+
+    knife[:stalenodes] = {
+      :use_ec2 => true
+    }
 
 = WARNING:
 
