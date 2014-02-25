@@ -63,6 +63,16 @@ module KnifeStalenodes
         :description  => "Max number of hosts to search",
         :default      => 2500
 
+    option :use_ec2,
+        :short        => "-e",
+        :long         => "--use-ec2",
+        :description  => "Indicate whether or not stale nodes are present in ec2",
+        :default      => false,
+        :proc => Proc.new { |key|
+          Chef::Config[:knife][:stalenodes] ||= {}
+          Chef::Config[:knife][:stalenodes][:use_ec2] = key
+        }
+
 
     def calculate_time
       seconds = config[:days].to_i * 86400 + config[:hours].to_i * 3600 + config[:minutes].to_i * 60
@@ -115,7 +125,8 @@ module KnifeStalenodes
     end
 
     def use_ec2?
-      if Chef::Config[:knife][:aws_access_key_id]
+      if Chef::Config[:knife][:stalenodes] &&
+        Chef::Config[:knife][:stalenodes][:use_ec2]
         return true
       else
         return false
