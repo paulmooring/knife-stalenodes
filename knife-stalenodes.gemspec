@@ -4,7 +4,7 @@ require 'knife-stalenodes/version'
 Gem::Specification.new do |s|
   s.name        = 'knife-stalenodes'
   s.version     = KnifeStalenodes::VERSION
-  s.date        = '2013-12-22'
+  s.date        = '2014-02-25'
   s.summary     = 'Knife plugin for listing nodes that have not checked in'
   s.description = s.summary
   s.authors     = ["Paul Mooring"]
